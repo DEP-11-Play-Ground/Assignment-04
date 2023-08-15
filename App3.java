@@ -324,27 +324,14 @@ case WITHDRAWSLS:
 
 case TRANSFER:
 
-
-
-
-
-
-
-
-
-case CHECK_ACCOUNT_BALANCE: 
-                      
-                       int index = 0;
-
-                    // ID Validation
-                    do {
+                      do {
                         valid = true;
-                        System.out.print("\tEnter the Account No: ");
+                        System.out.print("\tEnter New Customer ID: ");  // C-ac
                         id = SCANNER.nextLine().toUpperCase().strip();
                         if (id.isBlank()){
                             System.out.printf(ERROR_MSG, "ID can't be empty");
                             valid = false;
-                        }else if (!id.startsWith("C-") || id.length() < 4){
+                        }else if (!id.startsWith("SDB-") || id.length() < 4){
                             System.out.printf(ERROR_MSG, "Invalid ID format");
                             valid = false;
                         }else{
@@ -356,35 +343,102 @@ case CHECK_ACCOUNT_BALANCE:
                                     break;
                                 }
                             }
-                            boolean exists = false;
                             for (int i = 0; i < customerId.length; i++) {
                                 if (customerId[i].equals(id)){
-                                    index = i;
-                                    exists = true;
+                                    System.out.printf(ERROR_MSG, "Customer ID already exists");
+                                    valid = false;
                                     break;
                                 }
                             }    
-                            if (!exists){
-                                valid = false;
-                                System.out.printf(ERROR_MSG, "Account does not exist");
-                            }
                         }
-                        if (!valid) {
-                            System.out.print("\n\tDo you want to try again? (Y/n)");
-                            if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
-                                screen = DASHBOARD;
-                                continue mainLoop;
-                            }
-
-                    
-                        System.out.print("\tDo you want to check another (Y/n)? ");
-                        if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
-                        screen = DASHBOARD;
-                        break;
-                           
-                        }
-                   
+                        
+                        
                     }while (!valid);
+
+
+
+
+
+
+
+
+
+case CHECK_ACCOUNT_BALANCE: 
+                      
+int index = 0;
+// ID Validation
+do {
+    valid = true;
+    System.out.print("\tEnter the From Customer Account number: ");
+    id = SCANNER.nextLine().toUpperCase().strip();
+    if (id.isBlank()){
+        System.out.printf(ERROR_MSG, "ID can't be empty");
+        valid = false;
+    }else if (!id.startsWith("C-") || id.length() < 3){
+        System.out.printf(ERROR_MSG, "Invalid ID format");
+        valid = false;
+    }else{
+        String number = id.substring(2);
+        for (int i = 0; i < number.length(); i++) {
+            if (!Character.isDigit(number.charAt(i))){
+                System.out.printf(ERROR_MSG, "Invalid ID format");
+                valid = false;
+                break;
+            }
+        }
+
+        boolean exists = false;
+        for (int i = 0; i < customerId.length; i++) {
+            if (customerId[i].equals(id)){
+                index = i;
+                exists = true;
+                break;
+            }
+        }    
+        if (!exists){
+            valid = false;
+            System.out.printf(ERROR_MSG, "Customer ID does not exist");
+        }
+    }
+    if (!valid) {
+        System.out.print("\n\tDo you want to try again? (Y/n)");
+        if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
+            screen = DASHBOARD;
+            continue mainLoop;
+        }
+        System.out.println();
+    }
+}while (!valid);
+
+System.out.println("out loop");
+
+// newCustomerIds = new String[customerIds.length - 1];
+// newCustomerNames = new String[newCustomerIds.length];
+
+// for (int i = 0; i < customerIds.length; i++) {
+//     if (i < index){
+//         newCustomerIds[i] = customerIds[i];
+//         newCustomerNames[i] = customerNames[i];
+//     }else if (i == index){
+//         continue;
+//     }else{
+//         newCustomerIds[i - 1] = customerIds[i];
+//         newCustomerNames[i - 1] = customerNames[i];
+//     }
+// }
+
+// customerIds = newCustomerIds;
+// customerNames = newCustomerNames;
+
+System.out.println();
+System.out.printf(SUCCESS_MSG, 
+    String.format("%s has been deleted successfully", id));
+System.out.print("\tDo you want to continue adding (Y/n)? ");
+if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
+screen = DASHBOARD;
+break;
+}
+}while(true);
 
 
 
