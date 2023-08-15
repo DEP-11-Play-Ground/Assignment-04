@@ -306,6 +306,7 @@ case WITHDRAWSLS:
                   screen = DASHBOARD;
                   break;
 
+
                        }
                    
                     }while (!valid);
@@ -324,36 +325,133 @@ case WITHDRAWSLS:
 
 case TRANSFER:
 
-                      do {
-                        valid = true;
-                        System.out.print("\tEnter New Customer ID: ");  // C-ac
-                        id = SCANNER.nextLine().toUpperCase().strip();
-                        if (id.isBlank()){
-                            System.out.printf(ERROR_MSG, "ID can't be empty");
-                            valid = false;
-                        }else if (!id.startsWith("SDB-") || id.length() < 4){
-                            System.out.printf(ERROR_MSG, "Invalid ID format");
-                            valid = false;
-                        }else{
-                            String number = id.substring(4);
-                            for (int i = 0; i < number.length(); i++) {
-                                if (!Character.isDigit(number.charAt(i))){
-                                    System.out.printf(ERROR_MSG, "Invalid ID format");
-                                    valid = false;
-                                    break;
-                                }
-                            }
-                            for (int i = 0; i < customerId.length; i++) {
-                                if (customerId[i].equals(id)){
-                                    System.out.printf(ERROR_MSG, "Customer ID already exists");
-                                    valid = false;
-                                    break;
-                                }
-                            }    
-                        }
-                        
-                        
-                    }while (!valid);
+                                
+int indexFrom = 0;
+// ID Validation
+do {
+    valid = true;
+    System.out.print("\tEnter the Customer ID to delete: ");
+    id = SCANNER.nextLine().toUpperCase().strip();
+    if (id.isBlank()){
+        System.out.printf(ERROR_MSG, "ID can't be empty");
+        valid = false;
+    }else if (!id.startsWith("C-") || id.length() < 3){
+        System.out.printf(ERROR_MSG, "Invalid ID format");
+        valid = false;
+    }else{
+        String number = id.substring(2);
+        for (int i = 0; i < number.length(); i++) {
+            if (!Character.isDigit(number.charAt(i))){
+                System.out.printf(ERROR_MSG, "Invalid ID format");
+                valid = false;
+                break;
+            }
+        }
+        boolean exists = false;
+        for (int i = 0; i < customerId.length; i++) {
+            if (customerId[i].equals(id)){
+                indexFrom = i;
+                exists = true;
+                break;
+            }
+        }    
+        if (!exists){
+            valid = false;
+            System.out.printf(ERROR_MSG, "Customer ID does not exist");
+        }
+    }
+    if (!valid) {
+        System.out.print("\n\tDo you want to try again? (Y/n)");
+        if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
+            screen = DASHBOARD;
+            continue mainLoop;
+        }
+        System.out.println();
+    }
+                 }while (!valid);               
+                                 
+
+                                 int indexTo = 0;
+// ID Validation
+                    do {
+    valid = true;
+    System.out.print("\tEnter the Customer ID to delete: ");
+    id = SCANNER.nextLine().toUpperCase().strip();
+    if (id.isBlank()){
+        System.out.printf(ERROR_MSG, "ID can't be empty");
+        valid = false;
+    }else if (!id.startsWith("C-") || id.length() < 3){
+        System.out.printf(ERROR_MSG, "Invalid ID format");
+        valid = false;
+    }else{
+        String number = id.substring(2);
+        for (int i = 0; i < number.length(); i++) {
+            if (!Character.isDigit(number.charAt(i))){
+                System.out.printf(ERROR_MSG, "Invalid ID format");
+                valid = false;
+                break;
+            }
+        }
+        boolean exists = false;
+        for (int i = 0; i < customerId.length; i++) {
+            if (customerId[i].equals(id)){
+                indexTo = i;
+                exists = true;
+                break;
+            }
+        }    
+        if (!exists){
+            valid = false;
+            System.out.printf(ERROR_MSG, "Customer ID does not exist");
+        }
+    }
+    if (!valid) {
+        System.out.print("\n\tDo you want to try again? (Y/n)");
+        if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
+            screen = DASHBOARD;
+            continue mainLoop;
+        }
+        System.out.println();
+    }
+}while (!valid);
+
+                         System.out.println("From Account: "+customerNames[indexFrom]);
+                         System.out.println("To Account: "+customerNames[indexTo]);
+
+                         System.out.println("From Acoount balance: "+AccountBlance[indexFrom]);
+                          System.out.println("To Acoount balance: "+AccountBlance[indexTo]);
+
+                          System.out.print("Enter transfer amount: ");
+                          Double transfer = SCANNER.nextDouble();
+                          SCANNER.nextLine();
+
+                          if(transfer>100 && (AccountBlance[indexFrom]-transfer-(transfer*2/100))>500){
+                            Double newFrom = AccountBlance[indexFrom]-transfer-(transfer*2/100);
+                            Double newTo = AccountBlance[indexTo]+transfer;
+                            AccountBlance[indexFrom] = newFrom;
+                            AccountBlance[indexTo] = newTo;
+                            System.out.println("New Account Balance From: "+newFrom);
+                            System.out.println("New Account Balance From: "+newTo);
+
+
+                            System.out.println();
+                            System.out.printf(SUCCESS_MSG, 
+                            String.format("%s has been transfer successfully", transfer));
+                            System.out.print("\tDo you want to continue transfering (Y/n)? ");
+                            if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
+                            screen = DASHBOARD;
+                            break;
+                          }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -364,9 +462,9 @@ case TRANSFER:
 
 
 case CHECK_ACCOUNT_BALANCE: 
-                      
-int index = 0;
-// ID Validation
+                
+                 int index = 0;
+         // ID Validation
 do {
     valid = true;
     System.out.print("\tEnter the From Customer Account number: ");
@@ -409,46 +507,6 @@ do {
         System.out.println();
     }
 }while (!valid);
-
-System.out.println("out loop");
-
-// newCustomerIds = new String[customerIds.length - 1];
-// newCustomerNames = new String[newCustomerIds.length];
-
-// for (int i = 0; i < customerIds.length; i++) {
-//     if (i < index){
-//         newCustomerIds[i] = customerIds[i];
-//         newCustomerNames[i] = customerNames[i];
-//     }else if (i == index){
-//         continue;
-//     }else{
-//         newCustomerIds[i - 1] = customerIds[i];
-//         newCustomerNames[i - 1] = customerNames[i];
-//     }
-// }
-
-// customerIds = newCustomerIds;
-// customerNames = newCustomerNames;
-
-System.out.println();
-System.out.printf(SUCCESS_MSG, 
-    String.format("%s has been deleted successfully", id));
-System.out.print("\tDo you want to continue adding (Y/n)? ");
-if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
-screen = DASHBOARD;
-break;
-}
-}while(true);
-
-
-
-
-
-
-
-
-
-
 
 
 
