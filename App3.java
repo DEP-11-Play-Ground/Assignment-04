@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class App3 {
-      private static final Scanner SCANNER = new Scanner(System.in);
+    private static final Scanner SCANNER = new Scanner(System.in);
 
     public static void main(String[] args) {
 
@@ -23,8 +23,9 @@ public class App3 {
         final String ERROR_MSG = String.format("\t%s%s%s\n", COLOR_RED_BOLD, "%s", RESET);
         final String SUCCESS_MSG = String.format("\t%s%s%s\n", COLOR_GREEN_BOLD, "%s", RESET);
 
-        String[] Id = new String[0];
+        String[] customerId = new String[0];
         String[] customerNames = new String[0];
+        Double[] AccountBlance = new Double[0];
 
         String screen = DASHBOARD;
 
@@ -36,7 +37,7 @@ public class App3 {
             System.out.println(CLEAR);
             System.out.println("\t" + APP_TITLE + "\n");
 
-     switch(screen){
+switch(screen){
                 case DASHBOARD: 
                     System.out.println("\t[1]. Create new Account");
                     System.out.println("\t[2]. Deposits");
@@ -62,13 +63,15 @@ public class App3 {
                     break;
 
 
-    case CREATE_ACCOUNT:
-                    String id;
-                    String name;
+case CREATE_ACCOUNT:
+                    String id = "";
+                    String name = "";
+                    Double initialDeposit = 0.00;
                     boolean valid;
 
                     // ID Validation
                     do {
+                        valid = true;
                         System.out.print("\tEnter New Customer ID: ");  // C-ac
                         id = SCANNER.nextLine().toUpperCase().strip();
                         if (id.isBlank()){
@@ -86,8 +89,8 @@ public class App3 {
                                     break;
                                 }
                             }
-                            for (int i = 0; i < customerIds.length; i++) {
-                                if (customerIds[i].equals(id)){
+                            for (int i = 0; i < customerId.length; i++) {
+                                if (customerId[i].equals(id)){
                                     System.out.printf(ERROR_MSG, "Customer ID already exists");
                                     valid = false;
                                     break;
@@ -100,29 +103,359 @@ public class App3 {
 
                     // Name Validation
                     do{
+
+                        valid = true;
+                        System.out.print("\tEnter Customer Name: ");
+                        name = SCANNER.nextLine().strip();
+                        if (name.isBlank()){
+                            System.out.printf(ERROR_MSG, "Customer name can't be empty");
+                            valid = false;
+                            continue;
+                        }
+                        for (int i = 0; i < name.length(); i++) {
+                            if (!(Character.isLetter(name.charAt(i)) || 
+                                Character.isSpaceChar(name.charAt(i))) ) {
+                                System.out.printf(ERROR_MSG, "Invalid name");
+                                valid = false;
+                                break;
+                            }
+                        }   
                         
                     }while(!valid);
 
+                     //Deposit Validation
+
+                     do{
+
+                        valid = true;
+                        System.out.print("\tEnter Deposit value: ");
+                        name = SCANNER.nextLine().strip();
+                        if (!(initialDeposit>5000)){
+                            System.out.printf(ERROR_MSG, "Insufficient Account");
+                            valid = false;
+                            break;
+                        }
+                        
+                    }while(!valid);
+
+
+
+                    String[] newIdtemp = new String[customerId.length + 1];
+                    String[] newNametemp = new String[customerNames.length + 1];
+                    Double[] newDeposittemp = new Double[AccountBlance.length+1];
+                    
+                    for (int i = 0; i < customerId.length; i++) {
+                        newIdtemp[i] = customerId[i];
+                        newNametemp[i] = customerNames[i];
+                        newDeposittemp[i] = AccountBlance[i];
+                    }
+                    newIdtemp[newIdtemp.length - 1] = id;
+                    newNametemp[newNametemp.length - 1] = name;
+                    newDeposittemp[newDeposittemp.length-1] = initialDeposit;
+
+                    customerId = newIdtemp;
+                    customerNames = newNametemp;
+                    AccountBlance = newDeposittemp;
+
+                    System.out.println();
+                    System.out.printf(SUCCESS_MSG, 
+                        String.format("%s:%s has been saved successfully", id, name));
+                    System.out.print("\tDo you want to continue adding (Y/n)? ");
+                    if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
+                    screen = DASHBOARD;
+                    break;
+                
                 
 
-    case PRINT_DETAILS:
-                   
+case DEPOSITS:
+                    int index1 = 0;
 
-
-
-    case REMOVE_CUSTOMER:
-
-                    int index = 0;
                     // ID Validation
                     do {
+                        valid = true;
+                        System.out.print("\tEnter the Account No: ");
+                        id = SCANNER.nextLine().toUpperCase().strip();
+                        if (id.isBlank()){
+                            System.out.printf(ERROR_MSG, "ID can't be empty");
+                            valid = false;
+                        }else if (!id.startsWith("C-") || id.length() < 4){
+                            System.out.printf(ERROR_MSG, "Invalid ID format");
+                            valid = false;
+                        }else{
+                            String number = id.substring(4);
+                            for (int i = 0; i < number.length(); i++) {
+                                if (!Character.isDigit(number.charAt(i))){
+                                    System.out.printf(ERROR_MSG, "Invalid ID format");
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                            boolean exists = false;
+                            for (int i = 0; i < customerId.length; i++) {
+                                if (customerId[i].equals(id)){
+                                    index1 = i;
+                                    exists = true;
+                                    break;
+                                }
+                            }    
+                            if (!exists){
+                                valid = false;
+                                System.out.printf(ERROR_MSG, "Account is not Found");
+                            }
+                        }
+
+                       
+                        System.out.printf("Current Balance : %d.2", AccountBlance[index1]);
+
+                        System.out.print("Deposit amount : ");
+                        Double depositAmount = SCANNER.nextDouble();
+                        SCANNER.nextLine();
+
+                        if(!(depositAmount>=500)){System.out.print("Insufficient Amount"); break;
+                             }else{AccountBlance[index1]=(AccountBlance[index1]+depositAmount);}
+
+                             System.out.printf("New Account Balance: %.2d",AccountBlance[index1]);
+
+
+                        if (!valid) {
+                            System.out.print("\n\tDo you want to try again? (Y/n)");
+                            if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
+                                screen = DASHBOARD;
+                                continue mainLoop;
+                            }
+                            System.out.println();
+                        }
                    
                     }while (!valid);
+
+                  
+
+
+
+
+case WITHDRAWSLS:                 
+                     int index2 = 0;
+
+                    // ID Validation
+                    do {
+                        valid = true;
+                        System.out.print("\tEnter the Account Id: ");
+                        id = SCANNER.nextLine().toUpperCase().strip();
+                        if (id.isBlank()){
+                            System.out.printf(ERROR_MSG, "ID can't be empty");
+                            valid = false;
+                        }else if (!id.startsWith("C-") || id.length() < 4){
+                            System.out.printf(ERROR_MSG, "Invalid ID format");
+                            valid = false;
+                        }else{
+                            String number = id.substring(4);
+                            for (int i = 0; i < number.length(); i++) {
+                                if (!Character.isDigit(number.charAt(i))){
+                                    System.out.printf(ERROR_MSG, "Invalid ID format");
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                            boolean exists = false;
+                            for (int i = 0; i < customerId.length; i++) {
+                                if (customerId[i].equals(id)){
+                                    index2 = i;
+                                    exists = true;
+                                    break;
+                                }
+                            }    
+                            if (!exists){
+                                valid = false;
+                                System.out.printf(ERROR_MSG, "Account does not exist");
+                            }
+                        }
+                        
+
+                        if (!valid) {
+                            System.out.print("\n\tDo you want to try again? (Y/n)");
+                            if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
+                                screen = DASHBOARD;
+                                continue mainLoop;
+                            }
+                            System.out.println();
+                        }
+                   
+                    }while (!valid);
+
+                     System.out.printf("Current Balance : %d.2", AccountBlance[index2]);
+
+                        System.out.print("Withdraw amount : ");
+                        Double withdraw = SCANNER.nextDouble();
+                        SCANNER.nextLine();
+
+                        if(!( withdraw>100 || (AccountBlance[index2]-withdraw)>500)){System.out.print("Insufficient Amount"); break;
+                             }else{AccountBlance[index2]=(AccountBlance[index2]-withdraw);}
+
+                  System.out.printf("New Account Balance: %.2d",AccountBlance[index2]);
+                             
+
+
+
+
+
+
+
+
+
+
+
+
+case TRANSFER:
+
+
+
+
+
+
+
+
+
+case CHECK_ACCOUNT_BALANCE: 
+                      
+                       int index = 0;
+
+                    // ID Validation
+                    do {
+                        valid = true;
+                        System.out.print("\tEnter the Account No: ");
+                        id = SCANNER.nextLine().toUpperCase().strip();
+                        if (id.isBlank()){
+                            System.out.printf(ERROR_MSG, "ID can't be empty");
+                            valid = false;
+                        }else if (!id.startsWith("C-") || id.length() < 4){
+                            System.out.printf(ERROR_MSG, "Invalid ID format");
+                            valid = false;
+                        }else{
+                            String number = id.substring(4);
+                            for (int i = 0; i < number.length(); i++) {
+                                if (!Character.isDigit(number.charAt(i))){
+                                    System.out.printf(ERROR_MSG, "Invalid ID format");
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                            boolean exists = false;
+                            for (int i = 0; i < customerId.length; i++) {
+                                if (customerId[i].equals(id)){
+                                    index = i;
+                                    exists = true;
+                                    break;
+                                }
+                            }    
+                            if (!exists){
+                                valid = false;
+                                System.out.printf(ERROR_MSG, "Account does not exist");
+                            }
+                        }
+                        if (!valid) {
+                            System.out.print("\n\tDo you want to try again? (Y/n)");
+                            if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
+                                screen = DASHBOARD;
+                                continue mainLoop;
+                            }
+                           
+                        }
+                   
+                    }while (!valid);
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+case DELETE_ACCOUNT:
+                    
+                    int index3 = 0;
+
+                    // ID Validation
+                    do {
+                        valid = true;
+                        System.out.print("\tEnter the Account Id: ");
+                        id = SCANNER.nextLine().toUpperCase().strip();
+                        if (id.isBlank()){
+                            System.out.printf(ERROR_MSG, "ID can't be empty");
+                            valid = false;
+                        }else if (!id.startsWith("C-") || id.length() < 4){
+                            System.out.printf(ERROR_MSG, "Invalid ID format");
+                            valid = false;
+                        }else{
+                            String number = id.substring(4);
+                            for (int i = 0; i < number.length(); i++) {
+                                if (!Character.isDigit(number.charAt(i))){
+                                    System.out.printf(ERROR_MSG, "Invalid ID format");
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                            boolean exists = false;
+                            for (int i = 0; i < customerId.length; i++) {
+                                if (customerId[i].equals(id)){
+                                    index3 = i;
+                                    exists = true;
+                                    break;
+                                }
+                            }    
+                            if (!exists){
+                                valid = false;
+                                System.out.printf(ERROR_MSG, "Account does not exist");
+                            }
+                        }
+
+
+                        if (!valid) {
+                            System.out.print("\n\tDo you want to try again? (Y/n)");
+                            if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
+                                screen = DASHBOARD;
+                                continue mainLoop;
+                            }
+                            System.out.println();
+                        }
+                   
+                    }while (!valid);
+
+                    System.out.print("\tAre you sure to delete this account (Y/n)? ");
+                    if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")) break;
+
+
+                    newIdtemp = new String[customerId.length - 1];
+                    newNametemp= new String[newIdtemp.length];
+
+                    for (int i = 0; i < customerId.length; i++) {
+                        if (i < index3){
+                            newIdtemp[i] = customerId[i];
+                            newNametemp[i] = customerNames[i];
+                        }else if (i == index3){
+                            continue;
+                        }else{
+                            newIdtemp[i - 1] = customerId[i];
+                           newNametemp[i - 1] = customerNames[i];
+                        }
+                    }
+
+                    customerId = newIdtemp;
+                    customerNames = newNametemp;
 
                    
 
                     System.out.println();
                     System.out.printf(SUCCESS_MSG, 
-                        String.format("%s has been deleted successfully", id));
+                    String.format("%s  has been deleted successfully", id));
                     System.out.print("\tDo you want to continue adding (Y/n)? ");
                     if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
                     screen = DASHBOARD;
