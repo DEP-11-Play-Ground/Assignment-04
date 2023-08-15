@@ -130,7 +130,7 @@ case CREATE_ACCOUNT:
                         valid = true;
                         System.out.print("\tEnter Deposit value: ");
                         name = SCANNER.nextLine().strip();
-                        if (!(initialDeposit>5000)){
+                        if ((initialDeposit>5000)){
                             System.out.printf(ERROR_MSG, "Insufficient Account");
                             valid = false;
                             break;
@@ -204,7 +204,15 @@ case DEPOSITS:
                             }
                         }
 
-                       
+                        if (!valid) {
+                            System.out.print("\n\tDo you want to try again? (Y/n)");
+                            if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
+                                screen = DASHBOARD;
+                                continue mainLoop;
+                            }
+                            System.out.println();
+
+                              
                         System.out.printf("Current Balance : %d.2", AccountBlance[index1]);
 
                         System.out.print("Deposit amount : ");
@@ -216,14 +224,14 @@ case DEPOSITS:
 
                              System.out.printf("New Account Balance: %.2d",AccountBlance[index1]);
 
+                 System.out.printf(SUCCESS_MSG, 
+                 String.format("%s has been done successfully", "Diposit"));
+                  System.out.print("\tDo you want to continue (Y/n)? ");
+                  if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
+                  screen = DASHBOARD;
+                  break;
 
-                        if (!valid) {
-                            System.out.print("\n\tDo you want to try again? (Y/n)");
-                            if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
-                                screen = DASHBOARD;
-                                continue mainLoop;
-                            }
-                            System.out.println();
+                            
                         }
                    
                     }while (!valid);
@@ -278,9 +286,7 @@ case WITHDRAWSLS:
                                 continue mainLoop;
                             }
                             System.out.println();
-                        }
-                   
-                    }while (!valid);
+               
 
                      System.out.printf("Current Balance : %d.2", AccountBlance[index2]);
 
@@ -292,6 +298,17 @@ case WITHDRAWSLS:
                              }else{AccountBlance[index2]=(AccountBlance[index2]-withdraw);}
 
                   System.out.printf("New Account Balance: %.2d",AccountBlance[index2]);
+
+                  System.out.printf(SUCCESS_MSG, 
+                  String.format("%s has been done successfully", "Withdraw"));
+                  System.out.print("\tDo you want to continue (Y/n)? ");
+                  if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
+                  screen = DASHBOARD;
+                  break;
+
+                       }
+                   
+                    }while (!valid);
                              
 
 
@@ -358,6 +375,12 @@ case CHECK_ACCOUNT_BALANCE:
                                 screen = DASHBOARD;
                                 continue mainLoop;
                             }
+
+                    
+                        System.out.print("\tDo you want to check another (Y/n)? ");
+                        if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
+                        screen = DASHBOARD;
+                        break;
                            
                         }
                    
