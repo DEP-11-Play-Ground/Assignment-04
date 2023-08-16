@@ -129,11 +129,12 @@ case CREATE_ACCOUNT:
 
                         valid = true;
                         System.out.print("\tEnter Deposit value: ");
-                        name = SCANNER.nextLine().strip();
+                        initialDeposit = SCANNER.nextDouble();
+                        SCANNER.nextLine();
                         if ((initialDeposit>5000)){
                             System.out.printf(ERROR_MSG, "Insufficient Account");
                             valid = false;
-                            break;
+                            continue;
                         }
                         
                     }while(!valid);
