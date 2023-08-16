@@ -26,6 +26,7 @@ public class App3 {
         String[] customerId = new String[0];
         String[] customerNames = new String[0];
         Double[] AccountBlance = new Double[0];
+        int Account = 1;
 
         String screen = DASHBOARD;
 
@@ -68,7 +69,7 @@ case CREATE_ACCOUNT:
                     String name = "";
                     Double initialDeposit = 0.00;
                     boolean valid;
-                    int Account = 1;
+                    
 
                    System.out.printf("\tNew Account id: SDB-%05d\n",Account);
                    id = "SDB-"+Account;
