@@ -68,38 +68,41 @@ case CREATE_ACCOUNT:
                     String name = "";
                     Double initialDeposit = 0.00;
                     boolean valid;
+                    int Account = 1;
 
-                    // ID Validation
-                    do {
-                        valid = true;
-                        System.out.print("\tEnter New Customer ID: ");  // C-ac
-                        id = SCANNER.nextLine().toUpperCase().strip();
-                        if (id.isBlank()){
-                            System.out.printf(ERROR_MSG, "ID can't be empty");
-                            valid = false;
-                        }else if (!id.startsWith("SDB-") || id.length() < 4){
-                            System.out.printf(ERROR_MSG, "Invalid ID format");
-                            valid = false;
-                        }else{
-                            String number = id.substring(4);
-                            for (int i = 0; i < number.length(); i++) {
-                                if (!Character.isDigit(number.charAt(i))){
-                                    System.out.printf(ERROR_MSG, "Invalid ID format");
-                                    valid = false;
-                                    break;
-                                }
-                            }
-                            for (int i = 0; i < customerId.length; i++) {
-                                if (customerId[i].equals(id)){
-                                    System.out.printf(ERROR_MSG, "Customer ID already exists");
-                                    valid = false;
-                                    break;
-                                }
-                            }    
-                        }
+                   System.out.printf("\tNew Account id: SDB-%05d\n",Account);
+                   id = "SDB-"+Account;
+                    
+                    // do {
+                    //     valid = true;
+                    //     System.out.print("\tEnter New Customer ID: ");  // C-ac
+                    //     id = SCANNER.nextLine().toUpperCase().strip();
+                    //     if (id.isBlank()){
+                    //         System.out.printf(ERROR_MSG, "ID can't be empty");
+                    //         valid = false;
+                    //     }else if (!id.startsWith("SDB-") || id.length() < 4){
+                    //         System.out.printf(ERROR_MSG, "Invalid ID format");
+                    //         valid = false;
+                    //     }else{
+                    //         String number = id.substring(4);
+                    //         for (int i = 0; i < number.length(); i++) {
+                    //             if (!Character.isDigit(number.charAt(i))){
+                    //                 System.out.printf(ERROR_MSG, "Invalid ID format");
+                    //                 valid = false;
+                    //                 break;
+                    //             }
+                    //         }
+                    //         for (int i = 0; i < customerId.length; i++) {
+                    //             if (customerId[i].equals(id)){
+                    //                 System.out.printf(ERROR_MSG, "Customer ID already exists");
+                    //                 valid = false;
+                    //                 break;
+                    //             }
+                    //         }    
+                    //     }
                         
                         
-                    }while (!valid);
+                    // }while (!valid);
 
                     // Name Validation
                     do{
@@ -131,7 +134,7 @@ case CREATE_ACCOUNT:
                         System.out.print("\tEnter Deposit value: ");
                         initialDeposit = SCANNER.nextDouble();
                         SCANNER.nextLine();
-                        System.out.println(initialDeposit);
+                    //    System.out.println(initialDeposit);
 
                         if ((initialDeposit<5000.00)){
                             System.out.printf(ERROR_MSG, "Insufficient Account");
@@ -158,10 +161,11 @@ case CREATE_ACCOUNT:
                     customerId = newIdtemp;
                     customerNames = newNametemp;
                     AccountBlance = newDeposittemp;
+                   
 
                     System.out.println();
                     System.out.printf(SUCCESS_MSG, 
-                        String.format("%s:%s has been saved successfully", id, name));
+                        String.format("%s:%s has been saved successfully", id, name)); Account++;
                     System.out.print("\tDo you want to continue adding (Y/n)? ");
                     if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
                     screen = DASHBOARD;
